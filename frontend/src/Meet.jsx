@@ -38,14 +38,6 @@ const Meet = () => {
                         meeting_id: meetingId
                     }),
                 });
-                const res = await response.json();
-                if (res['multiple_detected']) {
-                    console.log('Warning: Multiple faces detected!');
-                    sendNotification({
-                        id: 'multiple_faces_detected',
-                        message: 'Warning: Multiple faces detected!',
-                    });
-                }
             }
         };
     }

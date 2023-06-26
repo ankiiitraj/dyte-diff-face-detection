@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import './App.css'
 import Stage from './Stage';
 
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000"
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:8000"
 
 function App() {
     const [meetingId, setMeetingId] = useState()

@@ -92,8 +92,8 @@ def connect_to_db():
 async def root():
     return {"message": "Hello World"}
 
-@app.post("/is_admin/")
-async def multiple_faces_list(admin: AdminProp):
+@app.post("/api/is_admin")
+async def is_admin(admin: AdminProp):
     conn = connect_to_db()
     cur = conn.cursor()
     cur.execute("SELECT count(1) FROM meeting_host_info WHERE meeting_id = %s AND admin_id = %s", (admin.meeting_id, admin.admin_id,))
@@ -105,10 +105,11 @@ async def multiple_faces_list(admin: AdminProp):
     else:
         return { "admin": False }
 
-@app.post("/suspicious_list/")
+@app.post("/api/suspicious_list")
 async def suspicious_list(meeting: ProctorPayload):
     conn = connect_to_db()
     cur = conn.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS meeting_proc_details (ts TIMESTAMP, meeting_id VARCHAR(255), participant_id VARCHAR(255), img_url VARCHAR(255), verdict VARCHAR(255))")
     cur.execute("SELECT count(1) FROM meeting_host_info WHERE meeting_id = %s AND admin_id = %s", (meeting.meeting_id, meeting.admin_id,))
     
     count = cur.fetchone()[0]
@@ -126,7 +127,7 @@ async def suspicious_list(meeting: ProctorPayload):
         conn.close()
         raise HTTPException(status_code=401, detail="Participant dose not has admin role")
 
-@app.post("/same_faces/")
+@app.post("/api/same_faces")
 async def same_faces(participant: ParticipantScreen):
     conn = connect_to_db()
     cur = conn.cursor()
@@ -179,7 +180,7 @@ async def same_faces(participant: ParticipantScreen):
 
     return {"id": participant.participant_id, "different_faces_detected": False}
 
-@app.post("/upload_photo/")
+@app.post("/api/upload_photo")
 async def upload_photo(participant: ParticipantScreen):
     img_data = participant.base64_img.split(",")[1]
     
@@ -201,7 +202,7 @@ async def upload_photo(participant: ParticipantScreen):
     
     return {"id": participant.participant_id, "img_url": upload_resp, "reference_image_uploaded": True}
 
-@app.post("/meetings")
+@app.post("/api/meetings")
 async def create_meeting(meeting: Meeting):
     response = await DYTE_API.post('/meetings', json=meeting.dict())
     if response.status_code >= 300:
@@ -213,6 +214,7 @@ async def create_meeting(meeting: Meeting):
 
     conn = connect_to_db()
     cur = conn.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS meeting_host_info (ts TIMESTAMP, meeting_id VARCHAR(255), admin_id VARCHAR(255))")
     cur.execute("INSERT INTO meeting_host_info (ts, meeting_id, admin_id) VALUES (CURRENT_TIMESTAMP, %s, %s)", (meeting_id, admin_id))
     conn.commit()
     cur.close()
@@ -221,7 +223,7 @@ async def create_meeting(meeting: Meeting):
     return resp_json
 
 
-@app.post("/meetings/{meetingId}/participants")
+@app.post("/api/meetings/{meetingId}/participants")
 async def add_participant(meetingId: str, participant: Participant):
     client_specific_id = f"react-samples::{participant.name.replace(' ', '-')}-{str(uuid.uuid4())[0:7]}"
     payload = participant.dict()
@@ -233,4 +235,4 @@ async def add_participant(meetingId: str, participant: Participant):
     return resp.text
 
 if __name__ == "__main__":
-    uvicorn.run("app:app", host="localhost", port=8000, log_level="debug", reload=True)
+    uvicorn.run("app:app", host="127.0.0.1", port=8000, log_level="debug", reload=True)

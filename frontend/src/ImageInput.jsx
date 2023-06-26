@@ -45,16 +45,15 @@ function ImageUploader({ setImgUploadedStatus }) {
     };
 
     return (
-        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
-            <div style={{ marginBottom: "10px" }}>Upload a photo of yours</div>
-            <div>
-                <input type="file" id="file" onChange={handleFileChange} />
-                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem' }}>
-                    <button type="submit" disabled={!selectedFile || uploading || uploadSuccess} style={{ marginTop: '10px', padding: '0.5rem 1rem', backgroundColor: '#0077cc', color: '#fff', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>
-                        {uploading ? 'Uploading...' : 'Upload'}
-                    </button>
-                </form>
-            </div>
+        <div style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', alignItems: 'center', fontSize: 'x-large' }}>
+            <div>Hey Candidate 👋</div>
+            <div style={{ marginBottom: "30px" }}>Please upload a image of yours to proceed</div>
+            <input type="file" id="file" style={{ border: "0.5px white solid"}} onChange={handleFileChange} />
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '1rem' }}>
+                <button type="submit" disabled={!selectedFile || uploading || uploadSuccess} style={{ marginTop: '10px', padding: '0.5rem 1rem', backgroundColor: '#3460f3', color: '#fff', border: 'none', borderRadius: '0.25rem', cursor: 'pointer' }}>
+                    {uploading ? 'Uploading...' : 'Upload'}
+                </button>
+            </form>
             {uploadError && <div style={{ marginTop: '10px', color: 'red' }}>{uploadError}</div>}
         </div>
     );

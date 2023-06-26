@@ -7,10 +7,10 @@ import Proctor from './Proctor';
 import Heading from './Heading';
 import {SendImageToBackendMiddleware, joinMeeting} from './utils' 
 // Constants
-const SERVER_URL = process.env.SERVER_URL || "http://localhost:8000"
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || "http://localhost:8000"
 let LAST_BACKEND_PING_TIME = 0;
 const DETECT_FACES_ENDPOINT = `${SERVER_URL}/same_faces`;
-const TIME_BETWEEN_BACKEND_PINGS = 10000;
+const TIME_BETWEEN_BACKEND_PINGS = 60000;
 
 const Meet = () => {
     const meetingEl = useRef();

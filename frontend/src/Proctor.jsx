@@ -22,7 +22,7 @@ const Proctor = () => {
         if(candidateStatuses?.map) {
             const id = setInterval(() => {
                 updateCandidateStatus()
-            }, 30000)
+            }, 60000)
             return () => {
                 clearInterval(id)
             }
